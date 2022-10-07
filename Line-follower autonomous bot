@@ -1,0 +1,78 @@
+#define LS 2      // left sensor
+#define RS 3      // right sensor
+
+#define LM1 6       // left motor
+#define LM2 7       // left motor
+#define RM1 8       // right motor
+#define RM2 9       // right motor
+
+int enA = 10;
+int enB = 11;
+
+int delay_time = 100;
+int sp = 65;  // for speed control
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(LS, INPUT);  //set these pins as inputs
+  pinMode(RS, INPUT);  //set these pins as inputs
+  pinMode(LM1, OUTPUT);  //set these pins as outputs
+  pinMode(LM2, OUTPUT);
+  pinMode(RM1, OUTPUT);
+  pinMode(RM2, OUTPUT);
+  pinMode(enA, OUTPUT);    //Enable pins for Motor Driver 
+  pinMode(enB, OUTPUT);
+  
+}
+
+void loop()
+{
+  if((digitalRead(LS)==0)&&(digitalRead(RS)==0))     // When Both Sensors are on White Surface Move Forward 
+  {
+//    Serial.println("00");
+    digitalWrite(LM1, LOW);
+    digitalWrite(LM2, HIGH);
+    analogWrite(enA,sp);   //Motor Speed, Pins must be connected with PWM pins "~"
+    digitalWrite(RM1, LOW);
+    digitalWrite(RM2, HIGH);
+    analogWrite(enB,sp);  //Motor Speed, Pins must be connected with PWM pins "~"
+//    delay(delay_time);
+  }
+  
+  else if((digitalRead(LS)==0) && (digitalRead(RS)==1))     // When Right sensor detects Black tape 
+  {
+    Serial.println("01");
+    digitalWrite(LM1, LOW);
+    digitalWrite(LM2, HIGH);
+    analogWrite(enA,sp);
+    digitalWrite(RM1, HIGH);
+    digitalWrite(RM2, LOW);
+    analogWrite(enB,sp);
+//    delay(delay_time);
+     
+  }
+
+  else if((digitalRead(LS)==1) && (digitalRead(RS)==0))     // When Left Sensor detects Black tape 
+  {
+    Serial.println("10");
+    digitalWrite(LM1, HIGH);
+    digitalWrite(LM2, LOW);
+    analogWrite(enA,sp);
+    digitalWrite(RM1, LOW);
+    digitalWrite(RM2, HIGH);
+    analogWrite(enB,sp);
+//    delay(delay_time);
+  }
+
+  else if((digitalRead(LS))==1 && (digitalRead(RS) ==1))          // When Both Sensors detects Black Tape 
+  {
+    Serial.println("11");
+    digitalWrite(LM1, LOW);
+    digitalWrite(LM2, LOW);
+    digitalWrite(RM1, LOW);
+    digitalWrite(RM2, LOW);
+  }
+  
+
+}
